@@ -1,0 +1,51 @@
+apply plugin: 'groovy'
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://github.com/MasonLiuChn/MasonMavenRepository/raw/maven/releases" }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.masonliu:gmaven:1.0.8'
+    }
+}
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+apply plugin: 'maven'
+
+//上传到本地
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://${project.rootDir}\\gradle_plugin\\build\\maven")
+            pom.version = "1.0.8"
+            pom.artifactId = "gmaven"
+            pom.groupId = "com.masonliu"
+        }
+    }
+}
+
+//上传到远程
+apply plugin: 'gmaven'
+
+gmavenGitRepo {
+    organization = 'MasonLiuChn'
+    repository = 'MasonMavenRepository'
+    branch = 'maven'
+    type = 'releases'
+}
+
+gmavenLibrary {
+    group = 'com.masonliu'
+    artifactId = 'test_plugin'
+    version = '1.3.6'
+    packaging = 'aar'
+    description = "重新整理"
+}

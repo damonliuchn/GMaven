@@ -1,0 +1,2 @@
+include ":app_java"
+include ":gradle_plugin"
